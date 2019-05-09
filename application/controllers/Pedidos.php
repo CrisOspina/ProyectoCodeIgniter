@@ -11,6 +11,7 @@ class Pedidos extends CI_Controller
         parent:: __construct();
         //Invocar los modelos que se necesiten para el todo el controlador
         $this->load->model("productos_model");
+        $this->load->model("pedidos_model");
         if (!$this->session->userdata('id')) 
         {
             redirect('login');
@@ -57,6 +58,14 @@ class Pedidos extends CI_Controller
 
         //Cargar a la vista.
         $this->load->view('nuevopedido', $data);
+    }
 
+    //Funcion agregar que nos servira para agregar o quitar productos del pedido
+    function agregar(){
+        //cargar el model de pedidos con una función que nos permita agregar o eliminar de la tabla de pedidos_detalle
+        $respuesta = $this->pedidos_model->agregar();
+
+        //Devuelva lo que retorne el modelo
+        echo $respuesta;
     }
 }

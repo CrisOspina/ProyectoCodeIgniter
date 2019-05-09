@@ -101,10 +101,10 @@ class Usuarios_model extends CI_model
 
     function modificar($param)
     {
-        $correo=$this->input->post('correo');
-        $nombre=$this->input->post('nombre');
-        $telefono=$this->input->post('telefono');
-        $perfil=$this->input->post('perfil');
+        $correo   =$this->input->post('correo');
+        $nombre   =$this->input->post('nombre');
+        $telefono =$this->input->post('telefono');
+        $perfil   =$this->input->post('perfil');
 
         $correo = $this->security->xss_clean($correo);
         $nombre = $this->security->xss_clean($nombre);
