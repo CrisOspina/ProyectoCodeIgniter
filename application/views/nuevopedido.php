@@ -127,15 +127,9 @@
     function calcular(pos) {
         //capturar los id de cant, iva, precio y subtotal para realizar operaciones.
         $("#subtotal_" + pos).val(0);
-<<<<<<< HEAD
-        var cant   = $("#cant_" + pos).val();
-        var precio = $("#valor_" + pos).val();
-        var iva    = $("#impuesto_" + pos).val();
-=======
         let cant   = $("#cant_" + pos).val();
         let precio = $("#valor_" + pos).val();
         let iva    = $("#impuesto_" + pos).val();
->>>>>>> tmp
 
         if(cant > 0 && precio > 0 && iva >= 0) {
             subtotal = eval(cant * precio) + (cant * precio * (iva / 100));
@@ -150,20 +144,6 @@
 
     function agregar(pos) {
 
-<<<<<<< HEAD
-        var ruta = $("#formapedidos").attr("action");
-        var tipo = 1;
-        //Los parametros los vamos a pasar en un array
-        var cant     = $("#cant_" + pos).val();
-        var precio   = $("#valor_" + pos).val();
-        var iva      = $("#impuesto_" + pos).val();
-        var subtotal = $("#subtotal_" + pos).val();
-        var ref      = $("#ref_" + pos).val();
-        var token    = $("#token_" + pos).val();
-
-        if(subtotal <= 0){
-            mensaje = "<span class='btn btn-dangers'>El subtotal debe ser mayor de cero</span>";
-=======
         let ruta = $("#formapedidos").attr("action");
         let tipo = 1;
         //Los parametros los vamos a pasar en un array
@@ -176,16 +156,10 @@
 
         if(subtotal <= 0){
             mensaje = "<span class='btn btn-danger'>El subtotal debe ser mayor de cero</span>";
->>>>>>> tmp
             $("#mensaje_" + pos).html(mensaje);
             $("#mensaje_" + pos).fadeOut(5000);
             return;
         }
-<<<<<<< HEAD
-    }
-
-</script>
-=======
 
         //invocar la funcion ajax que nos permite cargar el controlador y la función que esta en el action del formulario (pedidos/agregar).
 
@@ -254,4 +228,3 @@
 
 </script>
 
->>>>>>> tmp
