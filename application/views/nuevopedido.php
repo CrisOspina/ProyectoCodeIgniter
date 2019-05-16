@@ -31,13 +31,27 @@
     <?php include("incluidos/menu.movi.fin.php") ?>
     </div>
 
+
+
+    <div class="breadcome-area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-xs-6">
+                    <span id="mensaje_carrito" class="btn btn-info">El pedido va en </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
     <?php
         $atributos = array("id"=>"formapedidos", "name"=>"formapedidos");
         echo form_open('pedidos/agregar/', $atributos);
     ?>
 
         <div id="example-basic">
-            <h3>Shopping Cart</h3>
             <section>
                 <h3 class="product-cart-dn">Shopping</h3>
                 <div class="product-list-cart">
@@ -86,11 +100,12 @@
                                     <input type="number" class="form-control" name="subtotal_<?php echo $i;?>" id="subtotal_<?php echo $i;?>" readonly style="width: 200px; color: #000 !important " >
                                 </td>
                                 <td>
-                                    <button onclick="agregar('<?php echo $i;?>')" type="button" data-toggle="tooltip" title="Adicionar" class="pd-setting-ed">
+                                    <button onclick="agregar('<?php echo $i;?>',1)" type="button" data-toggle="tooltip" title="Agregar" class="pd-setting-ed">
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </button>
 
-                                    <button data-toggle="tooltip" title="Trash" class="pd-setting-ed">
+
+                                    <button type="button" onclick="agregar('<?php echo $i;?>',2)" data-toggle="tooltip" title="Trash" class="pd-setting-ed">
                                         <i class="fa fa-trash-o" aria-hidden="true"></i>
                                     </button>
 
@@ -103,6 +118,64 @@
                             </tr>
                         <?php } ?>
                         </table>
+
+                        <!--Tabla 2-->
+                        <table>
+
+                            <thead>
+                                <tr>
+                                  <th colspan="3">
+                                        Datos del cliente
+                                        <select name="cliente" id="cliente" class="form-control" onchange="cargarcliente()">
+                                            <option value="">Seleccione</option>
+                                            <?php
+                                              foreach($listadoclientes as $fila) { ?>
+                                                <option value="<?php echo $fila["id"]; ?>">
+                                                    <?php echo $fila["nombre"]. " " .$fila["comercial"]?>
+                                                </option>    
+                                            <?php } ?>
+                                            
+                                        </select>
+                                        <span id="mensajes_clientes"></span>
+                                  </th>
+                                </tr>
+                            </thead>
+
+                            <tbody> 
+                            <!--Fila 1-->
+                              <tr>
+                                <td>
+                                   <input type="text" class="form-control" name="nit" id="nit" placeholder="Digite el nit" required maxlength="50">
+                                </td>   
+                    
+                                <td>
+                                   <input type="text" class="form-control" name="nonmbre" id="nombre" placeholder="Digite el nombre" required maxlength="50">
+                                </td>
+                                <td>
+                                   <input type="text" class="form-control" name="comercial" id="comercial" placeholder="Digite el nombre comercial" maxlength="50">
+                                </td>
+                             </tr>
+                            <!--Fila 2-->
+                              <tr>
+                               <td>
+                                 <input type="email" class="form-control" name="correo" id="correo" placeholder="Digite el correo" required maxlength="255">
+                               </td>
+                               <td>
+                                 <input type="number" class="form-control" name="telfono" id="" placeholder="Digite el telefono" required maxlength="255">
+                               </td>
+                               <td>
+                                 <input type="text" class="form-control" name="direccion" id="direccion" placeholder="Digite el direccion" maxlength="255">
+                               </td>
+                              </tr>
+
+                              <tr>
+                                <td colspan="3">
+                                    <button class="btn btn-primary" name="enviar" id="enviar">Generar pedidos</button>
+                                </td>
+                              </tr>
+                            </tbody>
+                        </table>
+
                     </div>
                 </div>
             </section>
@@ -142,10 +215,10 @@
     //El método agregar recibira un tipo, si el uno que agregue y si es dos que elimine.
     //El tipo se pasa de acuerdo a la funcion que se invoque, en este caso agregar sera 1 y eliminar será 2.
 
-    function agregar(pos) {
+    function agregar(pos, tipo) {
 
         let ruta = $("#formapedidos").attr("action");
-        let tipo = 1;
+        //let tipo = 1;
         //Los parametros los vamos a pasar en un array
         let cant     = $("#cant_" + pos).val();
         let precio   = $("#valor_" + pos).val();
@@ -208,20 +281,57 @@
             //Siempre devuelve una respuesta, en este caso por nemotecnia se llama response
             success: function(response){
                 $("#mensaje_" + pos).show();
-                if(response == 1) {
+                if(tipo == 1) {
                     txt = 'Agregado';
                 }
-                else { 
+                else if(tipo == 2) { 
                     txt = 'Eliminado';
                 }
 
                 $("#mensaje_" + pos).html("<span class='btn btn-success'>" + txt + "</span>");
                 $("#mensaje_" + pos).fadeOut(5000);
+
+                $("#mensaje_carrito").html(response);
             },
             //capturar el error y mostrarlo en la capa mensaje
             error: function(jqXHR, textStatus, errorThrown){
                 $("#mensaje_" + pos).show();
                 $("#mensaje_" + pos).html("<span class='btn btn-danger'>Error al procesar:" + textStatus + ","+ errorThrown + "</span>");
+            }
+        });
+    }
+
+    //Función que envia el id del cliente, consulta y devuelve los datos en formato JSON
+    function cargarcliente() {
+        let ruta = $("#formapedidos").attr("action");
+        ruta = ruta.replace("agregar","cargarcliente");
+        
+        parametros = {
+            "cliente": $("#cliente").val()
+        }
+
+        $.ajax({
+            data: parametros,
+            type: "POST",
+            url: ruta,
+            beforesend: function(){
+                $("#mensajes_clientes" + pos).show();
+                $("#mensajes_clientes" + pos).html("<span class='btn btn-danger'>Procesando...</span>");
+            },
+            success: function (response){
+                $("#mensajes_clientes").hide();
+                //aplicar parse para leer un vector o array un JSON
+                data = JSON.parse(response);
+
+                $("#nombre").val(data[0].nombre);
+                $("#comercial").val(data[0].comercial);
+                $("#telefono").val(data[0].telefono);
+                $("#direccion").val(data[0].direccion);
+                $("#nit").val(data[0].nit);
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                $("#mensajes_clientes" + pos).show();
+                $("#mensaje_clientes" + pos).html("<span class='btn btn-danger'>Error al procesar:" + textStatus + ","+ errorThrown + "</span>");
             }
         });
     }

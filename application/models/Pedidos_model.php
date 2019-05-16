@@ -38,12 +38,12 @@ class Pedidos_model extends CI_model
 
        $res = $query->result_array();
 
-       if(count($res) >0 ){
+       if(count($res) > 0 ){
             //actualizar
             //Sirve también para ellminar el registro, dependiendo si paso 1 0 2
             //El update se pasa en un vector los datos a actualizar, se pide las condiciones y luego se ejecuta el update, el mismo principio es para el delete.
             $data = array("precio"   =>$precio,
-                          "impuesto"=>$impuesto,
+                          "impuesto" =>$impuesto,
                           "subtotal" =>$subtotal,
                           "cantidad" => $cantidad
             );
@@ -55,14 +55,14 @@ class Pedidos_model extends CI_model
                 //Actualice
                 $this->db->update("pedidos_detalle",$data);
             }
-            elseif ($tipo == 2){
+            else if ($tipo == 2){
                 $this->db->delete("pedidos_detalle");
             }
-       }
+        }
        else {
            //insertar
            $data = array("precio"   => $precio,
-                         "impuesto"=> $impuesto,
+                         "impuesto" => $impuesto,
                          "subtotal" => $subtotal,
                          "cantidad" => $cantidad,
                          "ref"      => $ref,
@@ -74,7 +74,27 @@ class Pedidos_model extends CI_model
        }
     }
 
-       return $tipo;
+    //Traer el total del carrito
+    $totalpedido = $this->carrito();
+    return $totalpedido;
+
+    }
+
+    //Función que me calcula cual es el valor total de lo que llevo en el pdido detalle basado en el token
+    function carrito(){
+        $token = $this->input->post('token');
+        $token = $this->security->xss_clean($token);
+
+        $vector = array("token" => $token);
+        $query  = $this->db->get_where("pedidos_detalle", $vector);
+        $total = 0;
+        $res = $query->result_array();
+
+        foreach ($res as $fila) {
+            $total = $total + $fila["subtotal"];
+        }
+
+        return $total;
     }
 }
 

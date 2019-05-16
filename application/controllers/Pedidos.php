@@ -12,6 +12,7 @@ class Pedidos extends CI_Controller
         //Invocar los modelos que se necesiten para el todo el controlador
         $this->load->model("productos_model");
         $this->load->model("pedidos_model");
+        $this->load->model("clientes_model");
         if (!$this->session->userdata('id')) 
         {
             redirect('login');
@@ -56,6 +57,9 @@ class Pedidos extends CI_Controller
         //pasar variable
         $data["token"] = $token;
 
+        //Enviar el listado de los clientes que se van a cargar en el select cliente
+        $data["listadoclientes"] = $this->clientes_model->listar();
+
         //Cargar a la vista.
         $this->load->view('nuevopedido', $data);
     }
@@ -64,8 +68,17 @@ class Pedidos extends CI_Controller
     function agregar(){
         //cargar el model de pedidos con una función que nos permita agregar o eliminar de la tabla de pedidos_detalle
         $respuesta = $this->pedidos_model->agregar();
-
+        
         //Devuelva lo que retorne el modelo
-        echo $respuesta;
+        //echo $respuesta;
+
+        echo "El pedido va en:" .number_format($respuesta, 0);
+    }
+
+    //
+    function cargarcliente(){
+        //del modelo extraer la funcion que trae el detalle del cliente o del registro y devolverlo como un JSON
+        $data = $this->clientes_model->detallecliente();
+        echo json_encode($data);
     }
 }
