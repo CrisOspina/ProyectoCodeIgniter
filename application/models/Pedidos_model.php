@@ -96,6 +96,91 @@ class Pedidos_model extends CI_model
 
         return $total;
     }
+
+    //
+    function unidades(){
+        $token = $this->input->post('token');
+        $token = $this->security->xss_clean($token);
+
+        $vector = array("token" => $token);
+        $query  = $this->db->get_where("pedidos_detalle", $vector);
+        $total = 0;
+        $res = $query->result_array();
+
+        foreach ($res as $fila) {
+            $total = $total + $fila["cantidad"];
+        }
+
+        return $total;
+    }
+
+    //
+    function finalizar(){
+
+        //capturar los valores del post que se usaran para el encabezado
+        $token     = $this->input->post('token');
+        $nombre    = $this->input->post('nombre');
+        $telefono  = $this->input->post('telefono');
+        $direccion = $this->input->post('direccion');
+        $correo    = $this->input->post('correo');
+
+        $token     = $this->security->xss_clean($token);
+        $nombre    = $this->security->xss_clean($nombre);
+        $telefono  = $this->security->xss_clean($telefono);
+        $direccion = $this->security->xss_clean($direccion);
+        $correo    = $this->security->xss_clean($correo);
+
+        //unidades y totales
+        $total    = $this->carrito();
+        $unidades = $this->unidades();
+
+        //que indica en proceso
+        $estado = 1;
+
+        //proceso de inserción se le pasa un array con los campos
+        $data = array(
+            "token"     => $token,
+            "nombre"    => $nombre,
+            "telefono"  => $telefono,
+            "correo"    => $correo,
+            "direccion" => $direccion,
+            "total"     => $total,
+            "unidades"  => $unidades,
+            "estado"    => $estado
+        );
+
+        //
+        $this->db->insert("pedidos_encabezado",$data);
+        return 0;
+    }
+
+    //función listar
+    function listar() {
+        $query = $this->db->get("pedidos_encabezado");
+        return $query->result_array();
+    }
+
+    //proceso de eliminación
+    //para realizar la eliminación, es necesario capturar el token y aplicar el delete en ambas tablas
+    function eliminar($id){
+        $data = $this->detalle($id);
+        foreach($data as $fila){
+            $token = $data[0]["token"];
+        }
+
+        $this->db->where("token", $token);
+        $this->db->delete("pedidos_detalle");
+
+        $this->db->where("token", $token);
+        $this->db->delete("pedidos_encabezado");
+    }
+
+    //el detalle de un registro
+    function detalle($id){
+        $vector = array("pkid" => $id);
+        $query = $this->db->get_where("pedidos_encabezado", $vector);
+        return $query->result_array();
+    }
 }
 
 ?>

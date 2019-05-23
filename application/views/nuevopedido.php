@@ -149,7 +149,7 @@
                                 </td>   
                     
                                 <td>
-                                   <input type="text" class="form-control" name="nonmbre" id="nombre" placeholder="Digite el nombre" required maxlength="50">
+                                   <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Digite el nombre" required maxlength="50">
                                 </td>
                                 <td>
                                    <input type="text" class="form-control" name="comercial" id="comercial" placeholder="Digite el nombre comercial" maxlength="50">
@@ -161,7 +161,7 @@
                                  <input type="email" class="form-control" name="correo" id="correo" placeholder="Digite el correo" required maxlength="255">
                                </td>
                                <td>
-                                 <input type="number" class="form-control" name="telfono" id="" placeholder="Digite el telefono" required maxlength="255">
+                                 <input type="number" class="form-control" name="telefono" id="telefono" placeholder="Digite el telefono" required maxlength="255">
                                </td>
                                <td>
                                  <input type="text" class="form-control" name="direccion" id="direccion" placeholder="Digite el direccion" maxlength="255">
@@ -171,6 +171,7 @@
                               <tr>
                                 <td colspan="3">
                                     <button class="btn btn-primary" name="enviar" id="enviar">Generar pedidos</button>
+                                    <span id="mensaje_realizar"></span>
                                 </td>
                               </tr>
                             </tbody>
@@ -328,6 +329,8 @@
                 $("#telefono").val(data[0].telefono);
                 $("#direccion").val(data[0].direccion);
                 $("#nit").val(data[0].nit);
+                $("#correo").val(data[0].correo);
+                // $("#correo").val(data[0].correo);
             },
             error: function (jqXHR, textStatus, errorThrown){
                 $("#mensajes_clientes" + pos).show();
@@ -335,6 +338,55 @@
             }
         });
     }
+
+    //proceso de guardado del encabezdo del pedido
+    $("#formapedidos").submit(function(evento) {
+
+        //adicional. Bloquear el envio de datos hasta que el ajax responda
+        evento.preventDefault();
+
+        //Capturar la ruta del formulario para indicarlo a donde enviarlo
+        let ruta = $("#formapedidos").attr("action");
+
+        //replace que cambie agregar por finalizar
+        ruta = ruta.replace("agregar","finalizar");
+
+        //Enviar todo el formulario como parametros
+        parametros = $("#formapedidos").serialize();
+
+        //
+        $.ajax({
+            data: parametros,
+            type: "POST",
+            url: ruta,
+            beforesend: function(){
+                $("#mensajes_realizar" + pos).show();
+                $("#mensajes_realizar" + pos).html("<span class='btn btn-danger'>Procesando...</span>");
+            },
+            success: function (response) {
+
+                $("#mensajes_realizar").hide();
+
+                //Si response es cero que lo mande al listado principal de pedidos
+                //para eso usaremos de nuevo replace para quitar la palabra finalizar
+                //y que solo quede pedidos
+
+                if(response == 0) {
+                    ruta = ruta.replace("finalizar","");
+                    //lo reenvia a pedidos
+                    $(location).attr("href",ruta);
+                } else {
+                    $("#mensajes_realizar").html("<span class='btn btn-success'>" + response + "</span>");
+                    $("#mensajes_realizar").fadeOut(3000);
+                }
+
+            },
+            error: function (jqXHR, textStatus, errorThrown){
+                $("#mensaje_realizar").show();
+                $("#mensaje_realizar").html("<span class='btn btn-danger'>Error al procesar:" + textStatus + ","+ errorThrown + "</span>");
+            }
+        });
+    })
 
 </script>
 

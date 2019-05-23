@@ -28,6 +28,9 @@ class Pedidos extends CI_Controller
         $data["linkedin"]      = $this->session->userdata('linkedin'); 
         $data["modulo"]        = "Pedidos";
         $data["descripcion"]   = "Listado de pedidos";
+
+        $data["lista"] = $this->pedidos_model->listar();
+
         $this->load->view('pedidos', $data);
     }
 
@@ -80,5 +83,24 @@ class Pedidos extends CI_Controller
         //del modelo extraer la funcion que trae el detalle del cliente o del registro y devolverlo como un JSON
         $data = $this->clientes_model->detallecliente();
         echo json_encode($data);
+    }
+
+    //crear la función finalizar
+    function finalizar() {
+
+        //La caracteristica de este sistema de pedidos es que todo gira alrededor del token
+        //agregar el token al vector de POST
+        $_POST['token'] = $_POST['token_1'];
+
+        //invocar el modelo y esperar la respuesta de este
+        $data = $this->pedidos_model->finalizar();
+
+        echo $data;
+    }
+
+    //funcion eliminar
+    function eliminar($id){
+        $this->pedidos_model->eliminar($id);
+        redirect('pedidos');
     }
 }
