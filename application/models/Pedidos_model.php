@@ -137,20 +137,39 @@ class Pedidos_model extends CI_model
         //que indica en proceso
         $estado = 1;
 
-        //proceso de inserción se le pasa un array con los campos
-        $data = array(
-            "token"     => $token,
+        //preguntar si el token existe en pedidos_encabezado
+        //si existe, actualizar, caso contrario insertamos
+
+        $res = $this->pedido_detalle($token);
+
+        if(sizeof($res) > 0) {
+          //actualizo data
+          $data = array(
             "nombre"    => $nombre,
             "telefono"  => $telefono,
             "correo"    => $correo,
             "direccion" => $direccion,
             "total"     => $total,
-            "unidades"  => $unidades,
-            "estado"    => $estado
-        );
+            "unidades"  => $unidades
+          );
 
-        //
-        $this->db->insert("pedidos_encabezado",$data);
+          $this->db->where("token",$token);
+          $this->db->update("pedidos_encabezado", $data);
+
+        } else {
+            $data = array(
+                "token"     => $token,
+                "nombre"    => $nombre,
+                "telefono"  => $telefono,
+                "correo"    => $correo,
+                "direccion" => $direccion,
+                "total"     => $total,
+                "unidades"  => $unidades,
+                "estado"    => $estado
+            );
+            //
+            $this->db->insert("pedidos_encabezado",$data);
+        }
         return 0;
     }
 
@@ -179,6 +198,13 @@ class Pedidos_model extends CI_model
     function detalle($id){
         $vector = array("pkid" => $id);
         $query = $this->db->get_where("pedidos_encabezado", $vector);
+        return $query->result_array();
+    }
+
+    //función que permite cargar el detalle, el pedido_detalle
+    function pedido_detalle($token) {
+        $vector = array("token" => $token);
+        $query = $this->db->get_where("pedidos_detalle", $vector);
         return $query->result_array();
     }
 }

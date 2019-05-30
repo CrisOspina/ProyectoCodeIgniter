@@ -103,4 +103,40 @@ class Pedidos extends CI_Controller
         $this->pedidos_model->eliminar($id);
         redirect('pedidos');
     }
+
+    //proceso de edición
+    //1 - cargar los datos del pedido basados en el id que pasemos
+    function editar($id) {
+        $data["nombreusuario"] = $this->session->userdata('nombre'); 
+        $data["fotousuario"]   = $this->session->userdata('foto'); 
+        $data["facebook"]      = $this->session->userdata('facebook'); 
+        $data["twitter"]       = $this->session->userdata('twitter'); 
+        $data["linkedin"]      = $this->session->userdata('linkedin'); 
+        $data["modulo"]        = "Pedidos";
+        $data["descripcion"]   = "Editar pedido numero" .$id;
+
+        $data["listaproductos"]  = $this->productos_model->listar();
+        $data["listadoclientes"] = $this->clientes_model->listar();
+
+        //invocar el encabezado del pedido y guardarlo en el vector data
+        $data["encabezado"] = $this->pedidos_model->detalle($id);
+
+        //invocar el detalle del pedido, usando el vector que se almacena en el encabezado
+        //1 - método o forma
+        // $data["detallepedido"] = $this->pedidos_model->pedido_detalle($data["encabezado"]);
+
+        //recorrer el encabezado y sacar el token y pasarlo en la funcion
+        foreach ($data["encabezado"] as $fila) {
+            $token = $fila["token"];
+        }
+
+        $data["detallepedido"] = $this->pedidos_model->pedido_detalle($token);
+        $data["token"] = $token;
+
+        //Cargar a la vista.
+        $this->load->view('nuevopedido', $data);
+    }
 }
+
+
+

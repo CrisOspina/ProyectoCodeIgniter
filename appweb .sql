@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-05-2019 a las 21:42:16
+-- Tiempo de generación: 30-05-2019 a las 03:48:22
 -- Versión del servidor: 10.1.32-MariaDB
 -- Versión de PHP: 7.2.5
 
@@ -40,7 +40,9 @@ CREATE TABLE `categoriasproductos` (
 --
 
 INSERT INTO `categoriasproductos` (`id`, `nombre`, `fecharegistro`, `fechamodificacion`) VALUES
-(1, 'aaa', '2019-05-08 19:22:36', '2019-05-08 19:22:36');
+(2, 'tofus', '2019-05-23 04:07:35', '2019-05-23 04:07:35'),
+(3, 'proteina vegetal', '2019-05-23 04:07:55', '2019-05-23 04:07:55'),
+(4, 'Leche vegetal', '2019-05-23 04:09:03', '2019-05-23 04:09:03');
 
 -- --------------------------------------------------------
 
@@ -68,7 +70,8 @@ CREATE TABLE `clientes` (
 --
 
 INSERT INTO `clientes` (`id`, `tipocliente`, `nit`, `nombre`, `telefono`, `rut`, `estadosfinancieros`, `correo`, `fecharegistro`, `fechamodificacion`, `direccion`, `comercial`) VALUES
-(1, 1, '111', 'aa', '23232', '', '', 'aaaa@gmail.com', '2019-05-08 19:38:13', '2019-05-08 19:38:13', 'cdcd', 'a');
+(3, 2, '181818181', 'Hel Midgard', '433434', '', '', 'hel@gmail.com', '2019-05-23 04:21:10', '2019-05-23 04:21:10', 'calle 45 B 78', ''),
+(4, 2, '343434', 'Hades Ortiz', '666666', '', '', 'hades@gmail.com', '2019-05-23 04:22:30', '2019-05-23 04:22:30', 'calle hell', '');
 
 -- --------------------------------------------------------
 
@@ -86,6 +89,15 @@ CREATE TABLE `pedidos_detalle` (
   `cantidad` bigint(20) NOT NULL,
   `impuesto` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `pedidos_detalle`
+--
+
+INSERT INTO `pedidos_detalle` (`pkid`, `ref`, `token`, `nombre`, `precio`, `subtotal`, `cantidad`, `impuesto`) VALUES
+(27, '111', 'nNQQ2K2L52RfsXJ+a+pnalLy4qV5UylyjP6Sxg8mqutpMGViMnFmbGc3YTV0azd1aTFyZWZqbWV0bnA1YjkzdA==', '', 9000, 20880, 2, 0),
+(32, '111', 'IbsdPeRDJcxzSQcTwSw3d5HXs+352tEijlMJJ9hu2190aGRuaWtidmIybGc1NTRlYWhrOWxrY2Z2c25pbG5zYg==', '', 9000, 20880, 2, 0),
+(33, '222', 'inTBMln/Yi3icipZvo3pGXZBndRx03R5Io4x+jfq+qh0aGRuaWtidmIybGc1NTRlYWhrOWxrY2Z2c25pbG5zYg==', '', 6600, 39270, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -105,6 +117,14 @@ CREATE TABLE `pedidos_encabezado` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `direccion` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `pedidos_encabezado`
+--
+
+INSERT INTO `pedidos_encabezado` (`pkid`, `token`, `nombre`, `telefono`, `correo`, `unidades`, `total`, `estado`, `fecha`, `direccion`) VALUES
+(3, 'IbsdPeRDJcxzSQcTwSw3d5HXs+352tEijlMJJ9hu2190aGRuaWtidmIybGc1NTRlYWhrOWxrY2Z2c25pbG5zYg==', 'Hel Midgard', '433434', 'hel@gmail.com', 2, 20880, 1, '2019-05-23 05:00:49', 'calle 45 B 78'),
+(4, 'inTBMln/Yi3icipZvo3pGXZBndRx03R5Io4x+jfq+qh0aGRuaWtidmIybGc1NTRlYWhrOWxrY2Z2c25pbG5zYg==', 'Hades Ortiz', '666666', 'hades@gmail.com', 5, 39270, 1, '2019-05-23 05:01:13', 'calle hell');
 
 -- --------------------------------------------------------
 
@@ -132,7 +152,9 @@ CREATE TABLE `productos` (
 --
 
 INSERT INTO `productos` (`id`, `categoria`, `ref`, `nombre`, `descripcion`, `precio`, `iva`, `cant`, `foto1`, `foto2`, `fecharegistro`, `fechamodificacion`) VALUES
-(1, 0, '111', 'Producto 1', '<p>\n	Lorem ipsum</p>\n', 2000, 16, 3, '9874a-mani.jpg', '', '2019-05-08 17:54:41', '2019-05-08 17:54:41');
+(3, 3, '111', 'Maní', '', 9000, 16, 9, '860f5-mani.jpg', '', '2019-05-23 04:11:24', '2019-05-23 04:11:24'),
+(4, 2, '222', 'Queso de almendras', '', 6600, 19, 20, '78842-queso-almendras.jpg', '', '2019-05-23 04:13:25', '2019-05-23 04:13:25'),
+(5, 4, '333', 'Yogurt de almendras - sabor mora', '', 18000, 19, 6, '7b630-yogurt-almendras-mora.jpg', '', '2019-05-23 04:15:01', '2019-05-23 04:15:01');
 
 -- --------------------------------------------------------
 
@@ -176,7 +198,7 @@ CREATE TABLE `tiposdeclientes` (
 --
 
 INSERT INTO `tiposdeclientes` (`id`, `nombre`, `fecharegistro`, `fechamodificacion`) VALUES
-(1, 'aaa', '2019-05-08 19:36:53', '2019-05-08 19:36:53');
+(2, 'Vegano', '2019-05-23 04:15:57', '2019-05-23 04:15:57');
 
 -- --------------------------------------------------------
 
@@ -234,15 +256,17 @@ ALTER TABLE `clientes`
 --
 ALTER TABLE `pedidos_detalle`
   ADD PRIMARY KEY (`pkid`),
-  ADD UNIQUE KEY `ref` (`ref`),
-  ADD UNIQUE KEY `token` (`token`);
+  ADD UNIQUE KEY `token` (`token`),
+  ADD UNIQUE KEY `token_2` (`token`) USING BTREE,
+  ADD UNIQUE KEY `ref_2` (`ref`,`token`),
+  ADD KEY `ref` (`ref`) USING BTREE;
 
 --
 -- Indices de la tabla `pedidos_encabezado`
 --
 ALTER TABLE `pedidos_encabezado`
   ADD PRIMARY KEY (`pkid`),
-  ADD UNIQUE KEY `token` (`token`);
+  ADD UNIQUE KEY `token` (`token`) USING BTREE;
 
 --
 -- Indices de la tabla `productos`
@@ -281,19 +305,31 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `categoriasproductos`
 --
 ALTER TABLE `categoriasproductos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `clientes`
 --
 ALTER TABLE `clientes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `pedidos_detalle`
+--
+ALTER TABLE `pedidos_detalle`
+  MODIFY `pkid` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT de la tabla `pedidos_encabezado`
+--
+ALTER TABLE `pedidos_encabezado`
+  MODIFY `pkid` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`
@@ -305,7 +341,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `tiposdeclientes`
 --
 ALTER TABLE `tiposdeclientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

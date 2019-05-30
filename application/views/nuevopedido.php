@@ -1,3 +1,23 @@
+
+<?php
+    //para que funcione el editar e ingresar debemos inicializar las variables
+    $nombre    = "";
+    $telefono  = "";
+    $direccion = "";
+    $correo    = "";
+    $total     = "";
+
+    if(isset($encabezado)){
+        foreach ($encabezado as $fila ) {
+            $nombre    = $fila["nombre"];
+            $telefono  = $fila["telefono"];
+            $direccion = $fila["direccion"];
+            $correo    = $fila["correo"];
+            $total     = $fila["total"];
+        }
+    }
+?>
+
 <!doctype html>
 <html class="no-js" lang="en">
 
@@ -37,7 +57,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3 col-xs-6">
-                    <span id="mensaje_carrito" class="btn btn-info">El pedido va en </span>
+                    <span id="mensaje_carrito" class="btn btn-info">El pedido va en: <?php echo $total;?> </span>
                 </div>
             </div>
         </div>
@@ -71,7 +91,25 @@
                             //Contador
                             $i = 0;
                             foreach($listaproductos as $fila) {
-                                $i++
+                                $i++;
+                                //inicia variables
+                                $cantidad = "";
+                                $impuesto = $fila["iva"];
+                                $precio   = $fila["precio"];
+                                $subtotal = "";
+
+                                if(isset($detallepedido)) {
+                                   foreach($detallepedido as $fila1) {
+                                      if($fila["ref"] == $fila1["ref"]) {
+                                        $cantidad = $fila1["cantidad"];
+                                        $impuesto = $fila1["impuesto"];
+                                        $precio   = $fila1["precio"];
+                                        $subtotal = $fila1["subtotal"];
+
+                                        break; //salimos del foreach fila1
+                                      }
+                                   }
+                                }
                         ?>
                             <tr>
                                 <td>
@@ -88,16 +126,16 @@
                                     <p><?php echo $fila["nombre"]?></p>
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" name="cant_<?php echo $i;?>" id="cant_<?php echo $i;?>" maxlength="4" style="width: 60px" onblur="calcular('<?php echo $i?>')">
+                                    <input type="number" class="form-control" name="cant_<?php echo $i;?>" id="cant_<?php echo $i;?>" maxlength="4" style="width: 60px" onblur="calcular('<?php echo $i?>')" value="<?php echo $cantidad ?>">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" name="valor_<?php echo $i;?>" value="<?php echo $fila["precio"]?>" id="valor_<?php echo $i;?>" maxlength="10" style="width: 100px" onblur="calcular('<?php echo $i?>')">
+                                    <input type="number" class="form-control" name="valor_<?php echo $i;?>" value="<?php echo $fila["precio"]?>" id="valor_<?php echo $i;?>" maxlength="10" style="width: 100px" onblur="calcular('<?php echo $i?>')" value="<?php echo $precio ?>">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" name="impuesto_<?php echo $i;?>" value="<?php echo $fila["iva"]?>" id="impuesto_<?php echo $i;?>" maxlength="2" style="width: 60px" onblur="calcular('<?php echo $i?>')">
+                                    <input type="number" class="form-control" name="impuesto_<?php echo $i;?>" value="<?php echo $fila["iva"]?>" id="impuesto_<?php echo $i;?>" maxlength="2" style="width: 60px" onblur="calcular('<?php echo $i?>')" value="<?php echo $impuesto ?>">
                                 </td>
                                 <td>
-                                    <input type="number" class="form-control" name="subtotal_<?php echo $i;?>" id="subtotal_<?php echo $i;?>" readonly style="width: 200px; color: #000 !important " >
+                                    <input type="number" class="form-control" name="subtotal_<?php echo $i;?>" id="subtotal_<?php echo $i;?>" readonly style="width: 200px; color: #000 !important " value="<?php echo $subtotal ?>">
                                 </td>
                                 <td>
                                     <button onclick="agregar('<?php echo $i;?>',1)" type="button" data-toggle="tooltip" title="Agregar" class="pd-setting-ed">
@@ -149,7 +187,7 @@
                                 </td>   
                     
                                 <td>
-                                   <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Digite el nombre" required maxlength="50">
+                                   <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Digite el nombre" required maxlength="50" value="<?php echo $nombre ?>">
                                 </td>
                                 <td>
                                    <input type="text" class="form-control" name="comercial" id="comercial" placeholder="Digite el nombre comercial" maxlength="50">
@@ -158,13 +196,13 @@
                             <!--Fila 2-->
                               <tr>
                                <td>
-                                 <input type="email" class="form-control" name="correo" id="correo" placeholder="Digite el correo" required maxlength="255">
+                                 <input type="email" class="form-control" name="correo" id="correo" placeholder="Digite el correo" required maxlength="255" value="<?php echo $correo ?>">
                                </td>
                                <td>
-                                 <input type="number" class="form-control" name="telefono" id="telefono" placeholder="Digite el telefono" required maxlength="255">
+                                 <input type="number" class="form-control" name="telefono" id="telefono" placeholder="Digite el telefono" required maxlength="255" value="<?php echo $telefono ?>">
                                </td>
                                <td>
-                                 <input type="text" class="form-control" name="direccion" id="direccion" placeholder="Digite el direccion" maxlength="255">
+                                 <input type="text" class="form-control" name="direccion" id="direccion" placeholder="Digite el direccion" maxlength="255" value="<?php echo $direccion ?>">
                                </td>
                               </tr>
 

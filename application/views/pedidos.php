@@ -102,7 +102,7 @@
                     
                     
                                     <td style="color: #000 !important">
-                                        <a href="<?php echo site_url('pedidos/editar/'.$fila["pkid"])?>" data-toggle="tooltip" title="Editar" class="pd-setting-ed">
+                                        <a href="<?php echo site_url('pedidos/editar/'.$fila["pkid"])?>" data-toggle="tooltip" title="Editar">
                                             <i class="fa fa-pencil-square-o" aria-hidden="true">Editar</i>
                                         </a>
 
